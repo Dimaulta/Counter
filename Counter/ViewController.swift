@@ -14,7 +14,16 @@ final class ViewController: UIViewController {
     
     @IBOutlet weak private var reset: UIButton!
     
-    private var counter = 0
+    private var counter = 0 {
+        didSet {
+            // Сохраняем значение при каждом изменении
+            saveCounter()
+        }
+    }
+    
+    // Ключ для сохранения в UserDefaults
+    private let counterKey = "savedCounter"
+    
     private let colors = [
         UIColor.systemRed,
         UIColor.systemGreen,
@@ -28,10 +37,20 @@ final class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Загружаем сохраненное значение при запуске
+        loadCounter()
         updateCounter()
         changeBackground()
     }
     
+    // MARK: - Сохранение состояния
+    private func saveCounter() {
+        UserDefaults.standard.set(counter, forKey: counterKey)
+    }
+    
+    private func loadCounter() {
+        counter = UserDefaults.standard.integer(forKey: counterKey)
+    }
     
     @IBAction private func countInCrem(_ sender: Any) {
         counter += 1
